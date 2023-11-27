@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Tic tac toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section>
+        <h1 class="game-title">Tic Tac Toe</h1>
+        <div id="game-container"></div>
+
+        <h2 id="game-status"></h2>
+        <button id="game-restart">Restart Game</button>
+    </section>
+</body>
+
+<script src="./tic-tac-toe.js"></script>
+<script>
+
+    const game = new TicTacToeGame("game-container");
+    game.statusContainer = 'game-status';
+    game.start();
+
+    console.log(game);
+
+    document
+        .querySelector('#game-restart')
+        .addEventListener('click', () => game.reset())
+
+</script>
+</html>
