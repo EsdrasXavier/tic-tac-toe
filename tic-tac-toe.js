@@ -1,3 +1,5 @@
+const DATA_CELL_ATTR = 'data-cell-index';
+
 const WINNING_CONDITIONS = [
     [0, 1, 2],
     [3, 4, 5],
@@ -21,10 +23,12 @@ const createCell = (index) => {
     const cell = document.createElement('div');
 
     cell.classList.add('cell');
-    cell.setAttribute('data-cell-index', index);
+    cell.setAttribute(DATA_CELL_ATTR, index);
 
     return cell;
 }
+
+const createCellContent = (playerMark) => `<span>${playerMark}</span>`;
 
 const getCurrentPlayerTurnMessage = (currentPlayer) => `It's ${currentPlayer}'s turn`;
 const getWinningMessage = (currentPlayer) => `Player ${currentPlayer} has won!`;
@@ -33,6 +37,7 @@ const getDrawMessage = () => `Game ended in a draw!`;
 
 class TicTacToeGame {
     _gameState = new Array(9).fill(EMPTY_CELL);
+    _winnerCells = [];
 
     _boardContainer = null;
     _statusContainer = null;
@@ -42,7 +47,7 @@ class TicTacToeGame {
 
     constructor(gameContainerId) {
         this._boardContainer = document.getElementById(gameContainerId);
-        
+
         if (this._boardContainer === null) {
             throw new Error(`Game container with id '${gameContainerId}' does not exist!`);
         }
@@ -53,7 +58,7 @@ class TicTacToeGame {
 
         if (this._statusContainer === null) {
             throw new Error(`Container with id '${gameContainerId}' does not exist!`);
-        }   
+        }
     }
 
     get isGameActive() {
@@ -73,6 +78,7 @@ class TicTacToeGame {
     reset() {
         this._gameStatus = ACTIVE_STATUS;
         this._currentPlayer = X_MARK;
+        this._winnerCells = [];
 
         this._clearCells();
         this._updateGameStatusUI();
@@ -97,7 +103,7 @@ class TicTacToeGame {
         this._updateCellUI(clickedCell);
 
         this._checkForGameOver();
-        
+
         if (this.isGameActive) {
             this._changePlayer();
         }
@@ -120,15 +126,16 @@ class TicTacToeGame {
 
             if (cell1 === cell2 && cell2 === cell3) {
                 isGameOver = true;
+                this._winnerCells = [winCondition[0], winCondition[1], winCondition[2]];
                 break;
             }
         }
-    
+
         if (isGameOver) {
             this._gameStatus = WIN_STATUS;
             return;
         }
-    
+
         const isDraw = !this._gameState.includes(EMPTY_CELL);
 
         if (isDraw) {
@@ -137,7 +144,7 @@ class TicTacToeGame {
     }
 
     _updateCellUI(cell) {
-        cell.innerHTML = this._currentPlayer;
+        cell.innerHTML = createCellContent(this._currentPlayer);
     }
 
     _clearCells() {
@@ -154,12 +161,20 @@ class TicTacToeGame {
             return;
         }
 
-        let gameOverMessge = getWinningMessage(this._currentPlayer);
         if (this._gameStatus === DRAW_STATUS) {
-            gameOverMessge = getDrawMessage();
+            this._statusContainer.innerHTML = getDrawMessage();
+        } else {
+            this._showWinnerAnimation();
+            this._statusContainer.innerHTML = getWinningMessage(this._currentPlayer);
         }
+    }
 
-        this._statusContainer.innerHTML = gameOverMessge
+    _showWinnerAnimation() {
+        this._winnerCells.forEach(index => document
+            .querySelector(`[${DATA_CELL_ATTR}='${index}']`)
+            .firstChild
+            .classList
+            .add('winner'));
     }
 
     _changePlayer() {

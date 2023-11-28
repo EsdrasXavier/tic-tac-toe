@@ -14,7 +14,7 @@ section {
 }
 
 .cell {
-    font-family: "Permanent Marker", cursive;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
     width: 100px;
     height: 100px;
     box-shadow: 0 0 0 1px #333333;
@@ -22,5 +22,53 @@ section {
     cursor: pointer;
 
     line-height: 100px;
+}
+
+.cell span {
+    display: inline-block;
+    animation: fadeIn .1s ease-in;
     font-size: 60px;
 }
+
+span.winner {
+    color: #cd4d40;
+	backface-visibility: visible !important;
+	animation: flip 1s ease;
+}
+
+@keyframes fadeIn {
+    0% { 
+        opacity: 0;
+        font-size: 20px;
+    }
+    100% { 
+        opacity: 1;
+        font-size: 60px;
+    }
+}
+
+
+@keyframes flip {
+	0% {
+		transform: perspective(400px) rotateY(0);
+		animation-timing-function: ease-out;
+	}
+	40% {
+		transform: perspective(400px) translateZ(150px) rotateY(170deg);
+		animation-timing-function: ease-out;
+	}
+	50% {
+		transform: perspective(400px) translateZ(150px) rotateY(190deg) scale(1);
+		animation-timing-function: ease-in;
+	}
+	80% {
+		transform: perspective(400px) rotateY(360deg) scale(.95);
+		animation-timing-function: ease-in;
+	}
+	100% {
+		transform: perspective(400px) scale(1);
+		animation-timing-function: ease-in;
+	}
+}
+
+  
